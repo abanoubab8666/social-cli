@@ -37,12 +37,14 @@ To use your own credentials, register at [my.telegram.org/apps](https://my.teleg
 
 ## Getting Discord Token
 
-Requires a Discord **user token** (not a Bot token), stored in your browser's localStorage after login.
+Requires a Discord **user token** (not a Bot token).
 
 1. Open Discord in your browser
-2. Press `F12` → go to the **Console** tab
-3. Run: `localStorage.token`
-4. Copy the returned value (without quotes)
+2. Press `F12` → go to the **Network** tab
+3. Perform any action in Discord (e.g. switch a channel)
+4. Find any request to `discord.com/api/`
+5. Click it → **Request Headers** → find the `Authorization` field
+6. Copy the value — that is your token
 
 > ⚠️ Your user token grants full access to your Discord account. Never share it or commit it to version control.
 
