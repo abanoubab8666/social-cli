@@ -41,8 +41,8 @@ Requires a Discord **user token** (not a Bot token).
 
 1. Open Discord in your browser
 2. Press `F12` → go to the **Network** tab
-3. Perform any action in Discord (e.g. switch a channel)
-4. Find any request to `discord.com/api/`
+3. Switch to a channel in Discord to trigger a messages request
+4. Find a request matching `discord.com/api/v9/channels/*/messages`
 5. Click it → **Request Headers** → find the `Authorization` field
 6. Copy the value — that is your token
 
