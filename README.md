@@ -1,4 +1,4 @@
-# Social Monitor
+# Social CLI
 
 A unified CLI tool for monitoring Discord and Telegram messages via a single HTTP API.
 
@@ -53,7 +53,7 @@ Requires a Discord **user token** (not a Bot token).
 ## Installation
 
 ```bash
-git clone https://github.com/ysyms/social-monitor.git
+git clone https://github.com/ysyms/social-cli.git
 cd social-monitor
 pip install -r requirements.txt
 ```
